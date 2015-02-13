@@ -2,18 +2,24 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="nl.x-services.plugins.googleplus"
-        version="1.0.5">
+        version="1.0.8">
 
   <name>Google+</name>
 
-  <description>
-    Use your Google account to authenticate with the app.
-  </description>
+  <description>Use your Google account to authenticate with the app.</description>
+
+  <author>Eddy Verbruggen</author>
 
   <license>MIT</license>
 
+  <keywords>Google, Google+, GooglePlus, Google Plus, Google Login, Login, OAuth</keywords>
+
+  <repo>https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git</repo>
+
+  <issue>https://github.com/EddyVerbruggen/cordova-plugin-googleplus/issues</issue>
+
   <engines>
-    <engine name="cordova" version=">=3.0.0"/>
+    <engine name="cordova" version=">=3.3.0"/>
   </engines>
 
   <js-module src="www/GooglePlus.js" name="GooglePlus">
@@ -23,7 +29,8 @@
   <!-- android -->
   <platform name="android">
 
-    <dependency id="com.google.playservices" url="https://github.com/MobileChromeApps/google-play-services" commit="efca392eab83df93085136e0cd7d86450fd58609" />
+    <dependency id="android.support.v4@21.0.1" url="https://github.com/MobileChromeApps/cordova-plugin-android-support-v4" />
+    <dependency id="com.google.playservices@21.0.0" url="https://github.com/MobileChromeApps/google-play-services" />
 
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="GooglePlus">
@@ -35,6 +42,7 @@
 
     <config-file target="AndroidManifest.xml" parent="/manifest">
       <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+      <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     </config-file>
 
     <source-file src="src/android/GooglePlus.java" target-dir="src/nl/xservices/plugins"/>

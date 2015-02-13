@@ -8,8 +8,16 @@ by [Eddy Verbruggen](http://twitter.com/eddyverbruggen)
 3. [Installation (CLI / Plugman)](#3-installation-phonegap-cli--cordova-cli)
 4. [Google+ API setup](#4-google-api-setup)
 5. [Usage](#5-usage)
-6. [Changelog](#6-changelog)
-7. [License](#7-license)
+6. [Troubleshooting](#6-troubleshooting)
+7. [Changelog](#7-changelog)
+8. [License](#8-license)
+
+
+## << --- Cordova Registry Warning [iOS]
+
+****Installing this plugin directly from Cordova Registry results in Xcode using a broken `GoogleOpenSource.framework` and `GooglePlus.framework`, this is because the current publish procedure to NPM breaks symlinks [CB-6092](https://issues.apache.org/jira/browse/CB-6092). Please install the plugin through a locally cloned copy or re-add the frameworks to Xcode after installation.****
+
+## ------------------------------------------ >>
 
 ## 1. Description
 
@@ -20,26 +28,28 @@ You will not only get the email address of the user, but also stuff like their f
 
 Android
 
-<img src="screenshots/Android1.png" width="235" height="400"/>&nbsp;
-<img src="screenshots/Android2.png" width="235" height="400"/>&nbsp;
-<img src="screenshots/Android3.png" width="235" height="400"/>
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/cordova-plugin-googleplus/master/screenshots/Android1.png" width="235" height="400"/>&nbsp;
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/cordova-plugin-googleplus/master/screenshots/Android2.png" width="235" height="400"/>&nbsp;
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/cordova-plugin-googleplus/master/screenshots/Android3.png" width="235" height="400"/>
 
  iOS
  
-<img src="screenshots/iOS1.png" width="235" height="417"/>&nbsp;
-<img src="screenshots/iOS2.png" width="235" height="417"/>&nbsp;
-<img src="screenshots/iOS3.png" width="235" height="417"/>&nbsp;
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/cordova-plugin-googleplus/master/screenshots/iOS1.png" width="235" height="417"/>&nbsp;
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/cordova-plugin-googleplus/master/screenshots/iOS2.png" width="235" height="417"/>&nbsp;
+<img src="https://raw.githubusercontent.com/EddyVerbruggen/cordova-plugin-googleplus/master/screenshots/iOS3.png" width="235" height="417"/>&nbsp;
  
 ## 3. Installation (PhoneGap CLI / Cordova CLI)
 This plugin is compatible with [Cordova Plugman](https://github.com/apache/cordova-plugman), compatible with [PhoneGap 3.0 CLI](http://docs.phonegap.com/en/3.0.0/guide_cli_index.md.html#The%20Command-line%20Interface_add_features), here's how it works with the CLI (backup your project first!):
 
+Using the Cordova CLI and the [Cordova Plugin Registry](http://plugins.cordova.io)
 ```
-$ phonegap local plugin add https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git
-```
-or, my personal preference
-```
-$ cordova plugin add https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git
+$ cordova plugin add nl.x-services.plugins.googleplus
 $ cordova prepare
+```
+
+Or using the phonegap CLI
+```
+$ phonegap local plugin add nl.x-services.plugins.googleplus
 ```
 
 GooglePlus.js is brought in automatically. There is no need to change or add anything in your html.
@@ -53,6 +63,8 @@ To get your iOS API key, follow Step 1 of [this guide](https://developers.google
 ### Android
 To configure Android, follow Step 1 of [this guide](https://developers.google.com/+/quickstart/android)
 
+Make sure you execute the `keytool` steps as well or authentication will fail.
+
 ## 5. Usage
 Check the [demo app](demo) to get you going quickly, or hurt yourself and follow these steps.
 
@@ -63,6 +75,7 @@ Note that none of these methods should be called before [`deviceready`](http://d
 window.plugins.googleplus.login(
     {
       'iOSApiKey': '1234567890-abcdefghijklm74bfw.apps.googleusercontent.com'
+      // there is no API key for Android; you app is wired to the Google+ API by listing your package name in the google dev console and signing your apk (which you have done in chapter 4)
     },
     function (obj) {
       alert(JSON.stringify(obj)); // do something useful instead of alerting
@@ -79,7 +92,6 @@ The success callback (second argument) gets a JSON object with the following con
 ```javascript
  obj.email        // 'eddyverbruggen@gmail.com'
  obj.userId       // user id
- obj.idToken      // 'eyJdhzhJ...' (iOS only, thanks #7)
  obj.displayName  // 'Eddy Verbruggen'
  obj.gender       // 'male' (other options are 'female' and 'unknown'
  obj.imageUrl     // 'http://link-to-my-profilepic.google.com'
@@ -89,6 +101,8 @@ The success callback (second argument) gets a JSON object with the following con
  obj.birthday     // '1977-04-22'
  obj.ageRangeMin  // 21 (or null or undefined or a different number)
  obj.ageRangeMax  // null (or undefined or a number)
+ obj.idToken
+ obj.oauthToken
 ```
 
 ### Try silent login
@@ -135,10 +149,17 @@ window.plugins.googleplus.disconnect(
 );
 ```
 
-## 6. CHANGELOG
+## 6. Troubleshooting
+- Q: After authentication I'm not redirected back to my app.
+- A: You probably changed the bundle id of your app after installing this plugin. Make sure that (on iOS) the `CFBundleURLTypes` bit in your `.plist` file is the same as the actual bundle id originating from `config.xml`.
+
+- Q: I can't get authentication to work on Android. And why is there no ANDROID API KEY?
+- A: On Android you need to execute the `keytool` steps, see the installation instructions for details.
+
+## 7. Changelog
 1.0.0: initial version supporting iOS and Android
 
-## 7. License
+## 8. License
 
 [The MIT License (MIT)](http://www.opensource.org/licenses/mit-license.html)
 
